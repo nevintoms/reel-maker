@@ -162,4 +162,5 @@ cython_debug/
 #.idea/
 
 # local
-extracted_frames/
+extracted-frames/
+face-detected/
