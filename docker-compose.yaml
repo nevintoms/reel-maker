@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  prefect:
+    build: ./prefect
+    container_name: prefect
+    environment:
+      - PREFECT_SERVER_API_HOST=0.0.0.0
+      - PREFECT_API_URL=http://127.0.0.1:4200/api
+    ports:
+      - 4200:4200
+
+  reel-maker:
+    build: .
+    container_name: reel-maker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PREFECT_API_URL=http://prefect:4200/api
+    volumes:
+      - ./:/app
