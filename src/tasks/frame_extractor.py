@@ -1,5 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
-from prefect import task
+from prefect import task, get_run_logger
 from src.utils import save_image
 from src.utils.constants import (
     SAMPLE_VIDEO_FOLDER,
@@ -12,6 +12,7 @@ import cv2
 
 @task
 def extract_frames_from_video(video_filename, frame_rate=1):
+    logger = get_run_logger()
     # Create input video file path
     input_video_path = os.path.join(SAMPLE_VIDEO_FOLDER, video_filename)
 
@@ -23,17 +24,17 @@ def extract_frames_from_video(video_filename, frame_rate=1):
 
     # Check if the video was opened successfully
     if not cap.isOpened():
-        print(f"Error: Could not open video {input_video_path}")
+        logger.info(f"Error: Could not open video {input_video_path}")
         return
 
     # Get the frames per second (fps) of the video
     fps = int(cap.get(cv2.CAP_PROP_FPS))
-    print(f"Frames per second: {fps}")
+    logger.info(f"Frames per second: {fps}")
 
     frame_count = 0
     saved_frame_count = 0
 
-    print(f"Starting frame extraction...")
+    logger.info("Starting frame extraction...")
     with ThreadPoolExecutor(max_workers=4) as executor:
         while True:
             # Read the next frame from the video
@@ -48,10 +49,10 @@ def extract_frames_from_video(video_filename, frame_rate=1):
                 frame_filename = os.path.join(
                     frames_folder, f"frame_{saved_frame_count:04d}.jpg"
                 )
-                executor.submit(save_image, frame, frame_filename)
+                executor.submit(save_image, frame, frame_filename, logger)
                 saved_frame_count += 1
 
             frame_count += 1
     # Release the video capture object
     cap.release()
-    print("Finished extracting frames.")
+    logger.info("Finished extracting frames.")
