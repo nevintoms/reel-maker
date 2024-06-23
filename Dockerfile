@@ -44,5 +44,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code
 COPY . .
 
+ENV PYTHONPATH "${PYTHONPATH}:/app/src"
+
 # Command to run the Python script
-CMD ["python", "src/extract_frames.py", "sample-2-ppl-1.mp4"]
+CMD ["python", "src/flows/main.py", "sample-2-ppl-1.mp4"]
