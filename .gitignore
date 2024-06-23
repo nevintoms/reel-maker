@@ -162,6 +162,5 @@ cython_debug/
 #.idea/
 
 # local
-extracted-frames/
-face-detected/
+outputs/
 *output_video.mp4
