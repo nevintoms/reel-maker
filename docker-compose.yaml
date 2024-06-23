@@ -12,7 +12,7 @@ services:
 
   reel-maker:
     build: .
-    container_name: reel-maker
+    container_name: worker
     environment:
       - PYTHONUNBUFFERED=1
       - PREFECT_API_URL=http://prefect:4200/api
